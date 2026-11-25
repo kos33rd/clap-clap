@@ -24,16 +24,17 @@ Ask the agent to read the Matter pairing code from the ESP32 over USB. Enter the
 
 ## Setup with a coding agent
 
-Open the project folder in your coding agent and paste the prompt below. If the agent can't see the folder, attach or paste `README.md` too. An agent with terminal and USB access can do the setup on your computer. Otherwise, it can give you the commands to run.
+Paste the prompt below into a coding agent with a local terminal. The agent will download the project and guide you through setup. With USB access, it can flash the board and run the recorder too.
 
 ```text
-Walk me through setting up Clap-Clap using this README.md. Start by asking what parts I already have. Ask for the model names or a photo if the pin labels are unclear.
+Help me set up Clap-Clap from scratch.
 
-1. Use Hardware and wiring to list the parts I'm missing. Tell me if jumper wires will work and guide me through soldering pin headers if needed. With USB unplugged, guide me wire by wire using the labels on my boards. Help me check the wiring before plugging in USB.
-2. Check the tools, USB port, and any existing recordings or model. Use Command reference to flash the recording firmware on a fresh checkout. Check the mic with a clap and close the serial monitor before recording.
-3. Guide me through a training session and a separate test session. Run the recorder where I can press Enter, or give me the exact commands to run and wait for me to finish.
-4. Train and export the model, replay the test clips, and tell me how many matched in each class. Rebuild and flash the firmware, then check that the detector is enabled.
-5. Ask which smart home system I use and check whether it supports Matter Generic Switch buttons. Read the numeric Matter pairing code by sending ? to the ESP32's USB serial console at 115200 baud. Show me the code so I can enter it in my smart home app. If you lack USB access, tell me how to read the code myself. Help me set up an automation and test it with BOOT and a double clap. For Home Assistant, ask for my event and light entity IDs and give me the YAML to paste.
+1. If I don't already have a Clap-Clap checkout, run git clone https://github.com/kos33rd/clap-clap.git in your workspace. Read README.md and run the setup commands from the checkout.
+2. Ask what parts I already have. Use Hardware and wiring to list what's missing. Ask for model names or a photo if the pin labels are unclear. Tell me if jumper wires will work and guide me through soldering pin headers if needed. With USB unplugged, guide me wire by wire and help me check the wiring before plugging it in.
+3. Check the tools, USB port, and any existing recordings or model. Use Command reference to flash the recording firmware on a fresh checkout. Check the mic with a clap and close the serial monitor before recording.
+4. Guide me through a training session and a separate test session. Run the recorder where I can press Enter, or give me the exact commands to run and wait for me to finish.
+5. Train and export the model, replay the test clips, and tell me how many matched in each class. Rebuild and flash the firmware, then check that the detector is enabled.
+6. Ask which smart home system I use and check whether it supports Matter Generic Switch buttons. Read the numeric Matter pairing code by sending ? to the ESP32's USB serial console at 115200 baud. Show me the code so I can enter it in my smart home app. If you lack USB access, tell me how to read the code myself. Help me set up an automation and test it with BOOT and a double clap. For Home Assistant, ask for my event and light entity IDs and give me the YAML to paste.
 
 Keep the recordings, model weights, generated header, and firmware binaries local.
 ```
