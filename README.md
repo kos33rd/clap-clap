@@ -26,6 +26,8 @@ The first flash enables USB recording. [Train the model, export `ClapModel.h`, a
 
 Ask the agent to read the Matter pairing code from the ESP32 over USB. Enter the code in your smart home app, set a button press to toggle a light, then clap twice to try it. [Read the code manually](#read-the-matter-pairing-code), [Home Assistant example](#home-assistant-automation)
 
+Once the automation works, unplug Clap-Clap from your computer and power it from a USB-C charger or another USB-C port that supplies power. Put it somewhere convenient where the microphone can pick up your claps and the board can stay connected to Wi-Fi.
+
 [Troubleshoot the setup](#troubleshooting) if the light doesn't toggle.
 
 ## Setup with a coding agent
