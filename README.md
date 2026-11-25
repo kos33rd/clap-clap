@@ -8,7 +8,7 @@ The ESP32 uses a small neural network to recognize claps. Start with the include
 
 ## Quick start
 
-[Set up with a coding agent](#setup-with-a-coding-agent) or follow the [manual steps](#hardware-and-wiring).
+[Set up with a coding agent](#setup-with-a-coding-agent) or follow the [manual steps](#hardware-and-wiring). [Check smart home compatibility](#smart-home-compatibility)
 
 ### 1. Connect the microphone
 
@@ -117,6 +117,20 @@ actions:
 mode: single
 ```
 
+## Smart home compatibility
+
+Clap-Clap pairs over Wi-Fi as a Matter Generic Switch (`0x000F`). In your smart home app, use a single button press to start the automation. Two claps send one press.
+
+- **Home Assistant** exposes the press as a `short_release` event. [Example automation](#home-assistant-automation)
+- **Apple Home, Samsung SmartThings, Amazon Alexa, and Homey Pro** list support for Matter buttons. [Apple Home](https://project-chip.github.io/connectedhomeip-doc/guides/darwin.html#supported-device-types-in-apple-home) · [SmartThings](https://partners.smartthings.com/matter) · [Alexa](https://developer.amazon.com/docs/alexaplus/smarthome/supported-matter-device-categories#switches-and-controls) · [Homey](https://support.homey.app/hc/en-us/articles/29238483093916-Matter-device-types-supported-by-Homey)
+- **Google Home** offers a button-press automation trigger. Pairing a prototype may require a Google Home Developer Console project. [Automation triggers](https://support.google.com/googlehome/answer/15962877) · [Prototype pairing](https://developers.home.google.com/codelabs/matter-device)
+- **Aqara Home** lists Generic Switch support. Check that your hub makes the press available as an automation trigger. [Aqara device types](https://opendoc.aqara.com/en/docs/Matter/Aqara-Supported-Matter-Device-Type-List.html)
+
+**Yandex Home with Alice and Sber Smart Home** document Matter On/Off switches and relays. [Yandex Matter devices](https://alice.yandex.ru/support/ru/smart-home/supported-matter-devices) · [Sber Matter devices](https://sberdevices.ru/help/sberboom-track/smarthome/connecting-matter/)
+
+- **Bridge.** Translate the click into a supported trigger. For Alice, Home Assistant with Yaha can expose a virtual button. [Virtual buttons with Yaha](https://docs.yaha-cloud.ru/v1.1.x/devices/button/)
+- **On/Off mode.** A custom firmware build could expose a supported Matter On/Off device and toggle its state on each clap pair. This requires the app to start an automation when that device's state changes. [Yandex state triggers](https://alice.yandex.ru/support/ru/smart-home/scenarios/device-status)
+
 ## Train a model for your room
 
 You can record and train with the firmware from the quick start. Install `uv` and a C++17 compiler available as `c++` for replay. Close the serial monitor before running the recorder. If you opened a new shell, set `port` and `board` again using the values in [Flash the firmware](#flash-the-firmware). [Install uv](https://docs.astral.sh/uv/getting-started/installation/)
@@ -185,8 +199,6 @@ For serial checks, use the board's native USB port and set the monitor to 115200
 The INMP441 sends 16 kHz audio over I²S. The firmware looks for peaks in two filtered signals and uses a small neural network to classify a 128 ms window around each candidate. It accepts a pair when two claps start 120–650 ms apart and at least one meets the higher confidence threshold. The second clap starts an 800 ms cooldown.
 
 A confirmed pair sends one click through Arduino's Matter Generic Switch endpoint over Wi-Fi. BLE is used during pairing. The sketch uses Espressif's example device identity for prototyping. [Arduino Matter Generic Switch](https://docs.espressif.com/projects/arduino-esp32/en/latest/matter/ep_generic_switch.html)
-
-Apple Home and SmartThings also list Matter Generic Switch buttons as a supported device type. [Apple Home device types](https://project-chip.github.io/connectedhomeip-doc/guides/darwin.html#supported-device-types-in-apple-home), [SmartThings Matter device types](https://partners.smartthings.com/matter)
 
 This is a DIY prototype. Detection quality depends on microphone placement, room acoustics, and the training recordings. Test with ordinary activity over several hours and count missed pairs and unexpected toggles.
 
