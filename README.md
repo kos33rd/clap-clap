@@ -16,11 +16,17 @@ You'll need an ESP32-C6, an INMP441 mic module, a few wires, and a USB data cabl
 
 ### 2. Record a few sounds
 
-Clap once, knock on the table, or make another everyday sound when the recorder says `Recording!`. You'll record a separate round with double claps to check that the button works in your room.
+[Flash the recording firmware](#flash-the-recording-firmware), then [record training and test clips](#record-training-and-test-clips). Clap once, knock on the table, or make another everyday sound when the recorder says `Recording!`. You'll record a separate round with double claps to check that the detector works in your room.
 
-### 3. Pair the button and try it
+### 3. Train the model and flash again
+
+The first flash enables USB recording. [Train the model, export `ClapModel.h`, and replay the test clips](#train-export-and-replay). Then rebuild and flash the firmware again to enable clap detection.
+
+### 4. Pair the button and try it
 
 Ask the agent to read the Matter pairing code from the ESP32 over USB. Enter the code in your smart home app, set a button press to toggle a light, then clap twice to try it. [Read the code manually](#read-the-matter-pairing-code), [Home Assistant example](#home-assistant-automation)
+
+[Troubleshoot the setup](#troubleshooting) if the light doesn't toggle.
 
 ## Setup with a coding agent
 
@@ -154,7 +160,23 @@ actions:
 mode: single
 ```
 
+## Troubleshooting
+
+For serial checks, use the board's native USB port and set the monitor to 115200 baud.
+
+| Symptom | What to check |
+| --- | --- |
+| The USB port is missing | Use a USB data cable and the native USB connector on the board. Run `arduino-cli board list` again. |
+| A clap produces no spike in the microphone test | Send `m` and clap while the monitor prints `Mic: left RMS=…`. If the left-channel peak stays low, unplug USB and [check the microphone wiring](#hardware-and-wiring), including `L/R` to `GND`. |
+| The detector is disabled after training | Send `?`. If it reports `no model`, [export `ClapModel.h`, rebuild, and flash again](#train-export-and-replay). If it reports `paused`, send `a` to resume detection. |
+| BOOT doesn't update the Home Assistant button event | Press and release BOOT on the paired board. Send `?` and look for `Matter ready on Wi-Fi`. If Matter is ready, verify you're watching the device's `event.*` entity for `short_release`. |
+| The button event updates but the light stays off | Check the automation's event and light entity IDs against the [Home Assistant example](#home-assistant-automation). |
+| BOOT toggles the light, but double claps are missed or other sounds trigger it | [Replay the separate test clips](#train-export-and-replay). Expect one pair per `double_clap` clip and zero for `clap` and `other`. Use any mismatches to decide what sounds to record more of for training. |
+
 ## How it works
+
+- **Set it up.** Record claps and everyday sounds → Train Clap-Clap on your computer → Add it to your smart home.
+- **Use it.** Clap twice → Clap-Clap sends a button press → Your light turns on or off.
 
 The INMP441 sends 16 kHz audio over I²S. The firmware looks for peaks in two filtered signals and uses a small neural network to classify a 128 ms window around each candidate. It accepts a pair when two claps start 120–650 ms apart and at least one meets the higher confidence threshold. The second clap starts an 800 ms cooldown.
 
