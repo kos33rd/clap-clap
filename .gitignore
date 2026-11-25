@@ -1,0 +1,18 @@
+# Local recordings and trained models
+/recordings*/
+/models/
+*.wav
+*.npz
+ClapModel.h
+
+# Firmware builds can contain trained weights
+/build/
+*.bin
+*.elf
+*.hex
+*.uf2
+
+# Local tooling
+.DS_Store
+__pycache__/
+.venv/
