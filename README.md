@@ -4,7 +4,7 @@
 
 Clap twice to toggle a light or start an automation in your smart home that supports Matter. 
 
-The ESP32 uses a small neural network to recognize claps. During normal use, audio stays on the board. You record your own sound samples and train the model on your computer. No cloud needed.
+The ESP32 uses a small neural network to recognize claps. You train it on your computer using claps and everyday sounds recorded in your room. During normal use, audio stays on the board. No cloud needed.
 
 ## Quick start
 
